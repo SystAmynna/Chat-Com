@@ -43,9 +43,17 @@ public class Tools {
     public static void close() {
         close(0);
     }
+    public static void forceClose() {
+        System.exit(0);
+    }
 
     public static String askString(String message) {
         return JOptionPane.showInputDialog(null, message, "Input", JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public static String askIp(String message) {
+        final String r = askString(message);
+        return r.isEmpty() ? "localhost" : r;
     }
 
     public static int askPort() {
@@ -67,6 +75,14 @@ public class Tools {
             else valid = true;
         }
         return port;
+    }
+
+    public static synchronized void wait(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            fatalError("Impossible d'attendre");
+        }
     }
 
 

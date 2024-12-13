@@ -77,8 +77,6 @@ public class ChatTerminal {
         StringBuilder sb = INSTANCE.sb;
         // le caractère de lecture
         char c;
-        // Vide le StringBuilder
-        sb.setLength(0);
         // Tant que le caractère lu n'est pas un retour à la ligne
         while ((c = INSTANCE.read()) != '\n' && c != '\r') {
             switch (c) {
@@ -98,8 +96,10 @@ public class ChatTerminal {
             // Afficher la ligne
             INSTANCE.terminal.writer().print(sb);
         }
+        String line = sb.toString();
+        sb.setLength(0);
         // Retourne la ligne
-        return sb.toString();
+        return line;
     }
 
     /**

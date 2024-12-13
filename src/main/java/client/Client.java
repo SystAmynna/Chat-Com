@@ -21,17 +21,17 @@ public class Client {
 
     private Client() {
         instance = this;
-        this.host = Tools.askString("Adresse IP du serveur:");
+        this.host = Tools.askIp("Adresse IP du serveur:");
         ChatTerminal.printl("Adresse IP du serveur: " + host);
         this.port = Tools.askPort();
         ChatTerminal.printl("Port du serveur: " + port);
         try {
             this.socket = new Socket(host, port);
-            socket.connect(socket.getRemoteSocketAddress());
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             ChatTerminal.printl("Connecté au serveur: " + socket.getRemoteSocketAddress() + ":" + port);
         } catch (IOException e) {
+
             Tools.fatalError("Impossible de se connecter au serveur");
         }
     }
@@ -43,7 +43,7 @@ public class Client {
             reader.close();
             writer.close();
         } catch (Exception e) {
-            Tools.close();
+            Tools.forceClose();
         }
     }
 
@@ -70,10 +70,11 @@ public class Client {
     }
 
     private void run() {
-
+        //new Listener().start();
         while (running) {
             String message = ChatTerminal.readLine();
-            ChatTerminal.printl("Moi: " + message);
+            send(message);
+            ChatTerminal.printl("[ Vous ]> " + message);
         }
     }
 
@@ -87,6 +88,7 @@ public class Client {
                     Tools.fatalError("Connexion perdue !");
                 }
                 ChatTerminal.printl(message);
+                Tools.wait(100);
             }
         }
     }
