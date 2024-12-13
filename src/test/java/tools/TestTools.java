@@ -12,5 +12,19 @@ class TestTools {
         assertTrue(true);
     }
 
+    @Test
+    void testAskString() {
+        String r = Tools.askString("Test");
+        System.out.println(r);
+        assertTrue(true);
+    }
+
+    @Test
+    void testAskPort() {
+        int r = Tools.askPort();
+        System.out.println(r);
+        assertTrue(true);
+    }
+
 
 }

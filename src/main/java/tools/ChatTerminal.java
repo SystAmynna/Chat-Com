@@ -106,7 +106,7 @@ public class ChatTerminal {
      * Affiche un message
      * @param message : le message à afficher
      */
-    public static void printl(String message) {
+    public static synchronized void printl(String message) {
         INSTANCE.terminal.writer().print("\u001B[2K");
         INSTANCE.terminal.writer().println("\r" + message);
         INSTANCE.terminal.writer().print(INSTANCE.sb);

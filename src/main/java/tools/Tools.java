@@ -1,5 +1,7 @@
 package tools;
 
+import client.Client;
+
 import javax.swing.*;
 
 /**
@@ -31,6 +33,7 @@ public class Tools {
      */
     private static void close(int n) {
         ChatTerminal.close();
+        if (Client.getInstance() != null) Client.getInstance().disconnect();
 
         System.exit(n);
     }
@@ -39,6 +42,31 @@ public class Tools {
      */
     public static void close() {
         close(0);
+    }
+
+    public static String askString(String message) {
+        return JOptionPane.showInputDialog(null, message, "Input", JOptionPane.QUESTION_MESSAGE);
+    }
+
+    public static int askPort() {
+        int port = 0;
+        boolean valid = false;
+        String message = "Port du serveur (6666 par defaut):";
+        while (!valid) {
+            String r = askString(message);
+            if (r.isEmpty()) return 6666;
+            try {
+                port = Integer.parseInt(r);
+            } catch (NumberFormatException e) {
+                message = "Port invalide (entier requis)";
+                port = 0;
+                continue;
+            }
+            if (port <= 1024) message = "Port invalide (port > 1024)";
+            else if (port > 65535) message = "Port invalide (port <= 65535)";
+            else valid = true;
+        }
+        return port;
     }
 
 
