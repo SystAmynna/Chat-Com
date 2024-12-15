@@ -23,7 +23,7 @@ public class Session extends Thread {
         }
     }
 
-    private synchronized void send(String message) {
+    protected synchronized void send(String message) {
         try {
             writer.write(message + "\n");
             writer.flush();
@@ -42,6 +42,7 @@ public class Session extends Thread {
 
     public void disconnect() {
         try {
+            Server.INSTANCE.sessions.remove(this);
             socket.close();
             ChatTerminal.printl("\033[36mClient déconnecté\033[0m");
         } catch (IOException e) {
@@ -55,8 +56,12 @@ public class Session extends Thread {
         while (true) {
             String message = receive();
             if (message == null) continue;
+            if (message.equals("!exit")) {
+                disconnect();
+                break;
+            }
             ChatTerminal.printl("\033[36m" + socket.getRemoteSocketAddress() + ":\033[0m " + message);
-            send("Message reçu");
+            //Server.INSTANCE.broadcast(message, this);
         }
     }
 

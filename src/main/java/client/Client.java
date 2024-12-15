@@ -6,6 +6,9 @@ import tools.Tools;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Classe client
+ */
 public class Client {
 
     private static Client instance;

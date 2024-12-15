@@ -5,10 +5,14 @@ import tools.Tools;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
 
     public static final Server INSTANCE = new Server();
+
+    public final List<Session> sessions = new ArrayList<>();
 
     private boolean running = true;
 
@@ -30,7 +34,9 @@ public class Server {
         ChatTerminal.printl("Demarrage sur le port " + port);
         while (running) {
             try {
-                new Session(serverSocket.accept()).start();
+                Session s = new Session(serverSocket.accept());
+                sessions.add(s);
+                s.start();
             } catch (IOException e) {
                 Tools.fatalError("Impossible de démarrer une session !");
             }
@@ -48,6 +54,12 @@ public class Server {
 
     public static void main(String[] args) {
         INSTANCE.run();
+    }
+
+    public void broadcast(String message, Session sender) {
+        for (Session s : sessions) {
+            if (s != sender) s.send(message);
+        }
     }
 
 

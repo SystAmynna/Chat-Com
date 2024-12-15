@@ -27,7 +27,12 @@ public class ChatTerminal {
     /**
      * StringBuilder pour la lecture
      */
-    private final StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder().append(SL);
+
+    /**
+     * String pour le début de la ligne
+     */
+    private static final String SL = "> ";
 
     /**
      * Constructeur privé
@@ -82,7 +87,7 @@ public class ChatTerminal {
             switch (c) {
                 case '\b': // Si c'est un backspace
                     // Supprime le dernier caractère
-                    if (!sb.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+                    if (sb.length() > 2) sb.deleteCharAt(sb.length() - 1);
                     break;
                 case '\u001B': // Si c'est ESC
                     sb.delete(0, sb.length());
@@ -92,12 +97,14 @@ public class ChatTerminal {
                     break;
             }
             // Nettoyer la ligne
-            INSTANCE.terminal.writer().print("\r\033[K");
+            INSTANCE.terminal.writer().print("> " + "\r\033[K");
             // Afficher la ligne
             INSTANCE.terminal.writer().print(sb);
         }
+        sb.delete(0, 2);
         String line = sb.toString();
         sb.setLength(0);
+        sb.append(SL);
         // Retourne la ligne
         return line;
     }
