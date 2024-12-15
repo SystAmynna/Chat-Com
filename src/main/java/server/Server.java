@@ -52,15 +52,17 @@ public class Server {
         }
     }
 
-    public static void main(String[] args) {
-        INSTANCE.run();
-    }
-
     public void broadcast(String message, Session sender) {
         for (Session s : sessions) {
             if (s != sender) s.send(message);
         }
     }
+
+    public static void main(String[] args) {
+        INSTANCE.run();
+    }
+
+
 
 
 }

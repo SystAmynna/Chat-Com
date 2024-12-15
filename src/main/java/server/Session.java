@@ -9,6 +9,7 @@ import java.net.Socket;
 public class Session extends Thread {
 
     private final Socket socket;
+    private boolean running = true;
 
     private BufferedReader reader;
     private BufferedWriter writer;
@@ -23,7 +24,7 @@ public class Session extends Thread {
         }
     }
 
-    protected synchronized void send(String message) {
+    protected void send(String message) {
         try {
             writer.write(message + "\n");
             writer.flush();
@@ -32,7 +33,7 @@ public class Session extends Thread {
         }
     }
 
-    private synchronized String receive() {
+    private String receive() {
         try {
             return reader.readLine();
         } catch (Exception e) {
@@ -42,6 +43,8 @@ public class Session extends Thread {
 
     public void disconnect() {
         try {
+            running = false;
+            //send("!exit");
             Server.INSTANCE.sessions.remove(this);
             socket.close();
             ChatTerminal.printl("\033[36mClient déconnecté\033[0m");
@@ -53,15 +56,19 @@ public class Session extends Thread {
     @Override
     public void run() {
         ChatTerminal.printl("\033[36mNouvelle connexion\033[0m");
-        while (true) {
+        while (running) {
             String message = receive();
             if (message == null) continue;
-            if (message.equals("!exit")) {
-                disconnect();
-                break;
-            }
             ChatTerminal.printl("\033[36m" + socket.getRemoteSocketAddress() + ":\033[0m " + message);
-            //Server.INSTANCE.broadcast(message, this);
+            if (message.startsWith("!") && message.length() > 1) processCmd(message);
+            else Server.INSTANCE.broadcast(message, this);
+        }
+    }
+
+    private void processCmd(String cmd) {
+        cmd = cmd.substring(1);
+        if (cmd.equals("!exit")) {
+            disconnect();
         }
     }
 

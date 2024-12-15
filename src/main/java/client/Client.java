@@ -50,7 +50,7 @@ public class Client {
         }
     }
 
-    private synchronized void send(String message) {
+    private void send(String message) {
         try {
             writer.write(message + "\n");
             writer.flush();
@@ -59,7 +59,7 @@ public class Client {
         }
     }
 
-    private synchronized String receive() {
+    private String receive() {
         try {
             return reader.readLine();
         } catch (Exception e) {
