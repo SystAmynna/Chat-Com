@@ -32,7 +32,7 @@ public class Client {
             this.socket = new Socket(host, port);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            ChatTerminal.printl("Connecté au serveur: " + socket.getRemoteSocketAddress() + ":" + port);
+            ChatTerminal.printl("Connexion vers " + socket.getRemoteSocketAddress() + " reussie");
         } catch (IOException e) {
 
             Tools.fatalError("Impossible de se connecter au serveur");

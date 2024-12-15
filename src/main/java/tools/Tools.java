@@ -9,6 +9,8 @@ import javax.swing.*;
  */
 public class Tools {
 
+    private static final int DEFAULT_PORT = 6666;
+
     /**
      * Constructeur privé (non utilisé)
      */
@@ -21,8 +23,8 @@ public class Tools {
      * @param message : message d'erreur
      */
     public static void fatalError(String message) {
-        // Ouvre une pop-up avec le message d'erreur (JOptionPane)
-        JOptionPane.showMessageDialog(null, message, "Fatal error", JOptionPane.ERROR_MESSAGE);
+        ChatTerminal.setStartOfLine("");
+        ChatTerminal.printl("\n \u001B[30m  \u001B[41m Erreur fatale: " + message + " \u001B[0m \n");
         // Ferme l'application
         close(1);
     }
@@ -48,7 +50,11 @@ public class Tools {
     }
 
     public static String askString(String message) {
-        return JOptionPane.showInputDialog(null, message, "Input", JOptionPane.QUESTION_MESSAGE);
+        String sol = ChatTerminal.getStartOfLine();
+        ChatTerminal.setStartOfLine(message + "> ");
+        String r = ChatTerminal.readLine();
+        ChatTerminal.setStartOfLine(sol);
+        return r;
     }
 
     public static String askIp(String message) {
@@ -59,10 +65,10 @@ public class Tools {
     public static int askPort() {
         int port = 0;
         boolean valid = false;
-        String message = "Port du serveur (6666 par defaut):";
+        String message = "Port du serveur (6666 par defaut) ";
         while (!valid) {
             String r = askString(message);
-            if (r.isEmpty()) return 6666;
+            if (r.isEmpty()) return DEFAULT_PORT;
             try {
                 port = Integer.parseInt(r);
             } catch (NumberFormatException e) {
